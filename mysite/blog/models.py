@@ -3,4 +3,17 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-# Create your models here.
+class Post(models.Model):
+    STATUS_CHOICES = (
+      ('draft','Draft'),
+      ('published','Published')
+    )
+
+    title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=120)
+    author = models.ForeignKey(User,related_name='blog_posts')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated  = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=10,choices=STATUS_CHOICES,
+    default='draft')
