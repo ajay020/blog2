@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -15,5 +16,7 @@ class Post(models.Model):
     body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=10,choices=STATUS_CHOICES,
-    default='draft')
+    status = models.CharField(max_length=10,choices=STATUS_CHOICES,default='draft')
+
+    def __str__(self):
+        return self.title
