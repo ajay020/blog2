@@ -1,0 +1,9 @@
+html{
+  position: relative;
+  min-height: 100%;
+}
+
+body{
+  /* background-color: #33e; */
+  font-family: 'Lucida Casaul','Comic Sans MS';
+}
