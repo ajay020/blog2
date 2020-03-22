@@ -1,0 +1,19 @@
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Hello world! intrinc </h1>
+    <div>
+      {% for post in posts%}
+        {{post.title}}
+        {{post.author}}
+        {{post.body}}
+        {{post.created}}
+        {{post.updated}}
+        <br>
+      {% endfor%}
+    </div>
+  </body>
+</html>
