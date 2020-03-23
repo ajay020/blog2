@@ -10,17 +10,10 @@
   <body>
 
     <div class="container-fluid">
-       <div class="row">
-           {% for post in posts%}
-           <div class="col-md-6">
-             <div class="img-thumbnail">
-                <a href="{{ post.get_absolute_url }}">   {{post.title}} </a><small style="float:right"> {{post.created}}  </small>
-                Author:{{post.author}}<br>
-                {{post.body}}
-             </div>
-             <br>
-           </div>
-           {% endfor%}
-       </div>
+      <h3>{{ post.title }}</h3>
+      <small>Created by : {{ post.author }}</small>
+      <hr>
+      <p>{{ post.body }}</p>
+    </div>
   </body>
 </html>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse
 from .models import Post
 
@@ -11,3 +11,10 @@ def blog_list(request):
     'posts':posts
     }
     return render(request,'blog/blog_list.html', context)
+
+def post_detail(request, id,slug):
+    post = get_object_or_404(Post,id=id,slug=slug)
+    context = {
+    'post':post
+    }
+    return render(request,'blog/post_detail.html',context)
