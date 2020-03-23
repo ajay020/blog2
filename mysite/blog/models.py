@@ -27,7 +27,7 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("blog:post_detail",args=[self.id,self.slug])
-        
+
 @receiver(pre_save, sender=Post)
 def pre_save_slug(sender, **kwargs):
     slug  = slugify(kwargs['instance'].title)

@@ -9,3 +9,7 @@ class PostCreateForm(forms.ModelForm):
         'body',
         'status'
         )
+
+class UserLoginForm(forms.Form):
+    username = forms.CharField(label="")
+    password  = forms.CharField(label="",widget=forms.PasswordInput)
