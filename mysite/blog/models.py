@@ -32,3 +32,11 @@ class Post(models.Model):
 def pre_save_slug(sender, **kwargs):
     slug  = slugify(kwargs['instance'].title)
     kwargs['instance'].slug = slug
+
+class Profile(models.Model):
+    user  = models.OneToOneField(User, on_delete=models.CASCADE)
+    dob = models.DateField(null=True,blank=True)
+    photo = models.ImageField(null=True,blank=True)
+
+    def __str__(self):
+        return 'Profile of {}'.format( self.user.username )

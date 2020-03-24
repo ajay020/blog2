@@ -17,6 +17,8 @@ from django.conf.urls import url,include
 from django.contrib.auth  import views as auth_views
 from django.contrib import admin
 from blog import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,6 +26,7 @@ urlpatterns = [
     url(r'^blog/', include('blog.urls',namespace='blog')),
     url(r'^login/$', views.user_login, name="user_login"),
     url(r'^logout/$', views.user_logout, name="user_logout"),
+    url(r'^register/$', views.register, name="register"),
 
     #password reset url's
     # url(r'^password_reset/$',auth_views.password_reset, name='password_reset'),
@@ -35,3 +38,6 @@ urlpatterns = [
     url(r'^',include('django.contrib.auth.urls')),
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static( settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

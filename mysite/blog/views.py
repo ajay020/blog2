@@ -5,7 +5,7 @@ from django.shortcuts import render,get_object_or_404,reverse,redirect
 from django.http import HttpResponse
 from .models import Post
 from django.contrib.auth import login,authenticate,logout
-from .forms import PostCreateForm,UserLoginForm
+from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm
 from django.http import HttpResponse,HttpResponseRedirect
 
 def post_list(request):
@@ -62,3 +62,19 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('post_list')
+
+def register(request):
+    if request.method == 'POST':
+        form  = UserRegistrationForm(request.POST or None)
+        if form.is_valid():
+            new_user = form.save(commit=False)
+            new_user.set_password(form.cleaned_data['password'])# it save password in encrypted form
+            new_user.save()
+            return redirect('post_list')
+    else:
+        form  = UserRegistrationForm()
+        
+    context = {
+        'form':form,
+        }
+    return render(request,'registration/register.html',context)

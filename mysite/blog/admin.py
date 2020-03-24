@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from blog.models import Post
+from blog.models import Post,Profile
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title','slug','author','status')
@@ -12,4 +12,10 @@ class PostAdmin(admin.ModelAdmin):
     list_editable = ('status',)
     date_hierarchy = ('created')
 
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'dob', 'photo')
+
+
+
 admin.site.register(Post,PostAdmin)
+admin.site.register(Profile,ProfileAdmin)
