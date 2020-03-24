@@ -18,10 +18,11 @@
                  <span>Hi {{ request.user|capfirst }}</span>
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                 <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
+                <a class="dropdown-item" href="{% url 'blog:edit_profile' %}">My profile</a>
+                <a class="dropdown-item" href="{% url 'user_logout' %}">Logout</a>
               </div>
              </li>
-         {% else %}
+          {% else %}
              <li class="nav-item">
                <a href="{% url 'user_login' %}" class="nav-link">Login </a>
              </li>

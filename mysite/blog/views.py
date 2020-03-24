@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404,reverse,redirect
 from django.http import HttpResponse
-from .models import Post
+from .models import Post,Profile
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate,logout
-from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm
+from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.http import HttpResponse,HttpResponseRedirect
 
 def post_list(request):
@@ -70,11 +71,30 @@ def register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])# it save password in encrypted form
             new_user.save()
+            Profile.objects.create(user=new_user)
             return redirect('post_list')
     else:
         form  = UserRegistrationForm()
-        
+
     context = {
         'form':form,
         }
     return render(request,'registration/register.html',context)
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(data=request.POST or None , instance = request.user )
+        profile_form = ProfileEditForm(data=request.POST or None, instance = request.user.profile,files= request.FILES )
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+    else:
+        user_form = UserEditForm(instance = request.user )
+        profile_form = ProfileEditForm(instance = request.user.profile)
+
+    context ={
+     'user_form':user_form,
+     'profile_form':profile_form,
+    }
+    return render(request,'blog/edit_profile.html',context)

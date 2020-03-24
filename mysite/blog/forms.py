@@ -1,5 +1,5 @@
 from django import  forms
-from .models import Post
+from .models import Post,Profile
 from django.contrib.auth.models import User
 
 class PostCreateForm(forms.ModelForm):
@@ -33,3 +33,18 @@ class UserRegistrationForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Password mismatch")
         return confirm_password
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+        'username',
+        'first_name',
+        'last_name',
+        'email',
+        )
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ('user',)
