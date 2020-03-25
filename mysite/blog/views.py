@@ -4,13 +4,21 @@ from __future__ import unicode_literals
 from django.shortcuts import render,get_object_or_404,reverse,redirect
 from django.http import HttpResponse
 from .models import Post,Profile
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate,logout
 from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.http import HttpResponse,HttpResponseRedirect
 
 def post_list(request):
-    posts = Post.objects.all()
+    posts = Post.published.all()
+    query = request.GET.get('q')
+    if query:
+        posts = Post.published.filter(
+        Q(title__icontains=query)|
+        Q(author__username=query)|
+        Q(body__icontains=query)
+        )
     context = {
     'posts':posts
     }
@@ -89,6 +97,7 @@ def edit_profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+            return HttpResponseRedirect(reverse('blog:edit_profile'))
     else:
         user_form = UserEditForm(instance = request.user )
         profile_form = ProfileEditForm(instance = request.user.profile)

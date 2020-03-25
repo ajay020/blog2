@@ -8,7 +8,14 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return super(PublishedManager ,self).get_queryset().filter(status = 'published')
+
 class Post(models.Model):
+    objects  = models.Manager() #default Manager
+    published  = PublishedManager()#our custom model Manager
+
     STATUS_CHOICES = (
       ('draft','Draft'),
       ('published','Published')

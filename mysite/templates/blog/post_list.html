@@ -16,6 +16,10 @@
       </div>
       <br>
     </div>
+    {% empty %}
+     <div class="container-fluid">
+         <h3>No post found for "{{ request.GET.q }}"</h3>
+     </div>
     {% endfor%}
 </div>
 {% endblock %}
