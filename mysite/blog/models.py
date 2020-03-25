@@ -13,7 +13,7 @@ class PublishedManager(models.Manager):
         return super(PublishedManager ,self).get_queryset().filter(status = 'published')
 
 class Post(models.Model):
-    objects  = models.Manager() #default Manager
+    objects  = models.Manager() #default model  Manager
     published  = PublishedManager()#our custom model Manager
 
     STATUS_CHOICES = (
@@ -28,6 +28,9 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated  = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10,choices=STATUS_CHOICES,default='draft')
+
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return self.title

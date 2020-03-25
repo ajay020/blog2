@@ -9,16 +9,27 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate,logout
 from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.http import HttpResponse,HttpResponseRedirect
+from django.core.paginator  import Paginator,EmptyPage,PageNotAnInteger
+
 
 def post_list(request):
-    posts = Post.published.all()
+    post_list = Post.published.all()
     query = request.GET.get('q')
     if query:
-        posts = Post.published.filter(
+        post_list = Post.published.filter(
         Q(title__icontains=query)|
         Q(author__username=query)|
         Q(body__icontains=query)
         )
+    paginator = Paginator(post_list,5)
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts  = paginator.page(1)
+    except EmptyPage:
+        posts  = paginator.page(paginator.num_pages)
+
     context = {
     'posts':posts
     }
