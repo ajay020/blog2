@@ -30,10 +30,25 @@ def post_list(request):
     except EmptyPage:
         posts  = paginator.page(paginator.num_pages)
 
+    if page is None:
+        start_index=0
+        end_index=7
+    else:
+       (start_index,end_index)  = proper_pagination(posts,index=4)
+       page_range = list(paginator.page_range)[start_index:end_index]
+
     context = {
-    'posts':posts
+    'posts':posts,
+    'page_range':page_range
     }
     return render(request,'blog/post_list.html', context)
+def proper_pagination(posts,index)   :
+    start_index = 0
+    end_index = 7
+    if posts.number >  index :
+        start_index = posts.number - index
+        end_index = start_index + end_index
+    return (start_index,end_index)
 
 def post_detail(request, id,slug):
     post = get_object_or_404(Post,id=id,slug=slug)
@@ -41,6 +56,7 @@ def post_detail(request, id,slug):
     'post':post
     }
     return render(request,'blog/post_detail.html',context)
+
 def post_create(request):
     if request.method == 'POST':
         form = PostCreateForm(request.POST)
@@ -54,7 +70,6 @@ def post_create(request):
     context = {
     'form':form
     }
-
     return render(request,'blog/post_create.html',context)
 
 def user_login(request):
