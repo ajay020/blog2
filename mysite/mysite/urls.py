@@ -36,6 +36,7 @@ urlpatterns = [
 
     ## you could use below urls also for all the above password_reset URLs
     url(r'^',include('django.contrib.auth.urls')),
+    url(r'^oauth/',include('social_django.urls', namespace="social")),
 
 ]
 

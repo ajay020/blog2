@@ -37,7 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'blog'
+    'blog',
+    'social_django',
+]
+
+AUTHENTICATION_BACKENDS = [
+'social_core.backends.github.GithubOAuth2',
+'social_core.backends.google.GoogleOAuth2',
+'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +55,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware'
+
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -63,6 +73,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -144,3 +157,13 @@ MEDIA_ROOT  = os.path.join(BASE_DIR, 'media')
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGIN_REDIRECT_URL = 'post_list'
+LOGIN_URL = 'user_login'
+LOGOUT_URL = 'user_logout'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'googleauth_key'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'fsdfasdf'
+
+SOCIAL_AUTH_GITHUB_KEY = "8754ba8b1e80e34929f3"
+SOCIAL_AUTH_GITHUB_SECRET = "7fafbfa98c8fb4ccd4d5e17e75b093030642ba1b"

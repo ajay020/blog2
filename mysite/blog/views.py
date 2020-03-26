@@ -35,7 +35,8 @@ def post_list(request):
         end_index=7
     else:
        (start_index,end_index)  = proper_pagination(posts,index=4)
-       page_range = list(paginator.page_range)[start_index:end_index]
+
+    page_range = list(paginator.page_range)[start_index:end_index]
 
     context = {
     'posts':posts,
@@ -117,6 +118,8 @@ def register(request):
 
 @login_required
 def edit_profile(request):
+    print(request.user)
+
     if request.method == 'POST':
         user_form = UserEditForm(data=request.POST or None , instance = request.user )
         profile_form = ProfileEditForm(data=request.POST or None, instance = request.user.profile,files= request.FILES )
