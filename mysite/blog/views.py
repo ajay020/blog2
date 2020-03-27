@@ -51,10 +51,16 @@ def proper_pagination(posts,index)   :
         end_index = start_index + end_index
     return (start_index,end_index)
 
-def post_detail(request, id,slug):
-    post = get_object_or_404(Post,id=id,slug=slug)
+def post_detail(request, id, slug):
+    post = get_object_or_404(Post, id=id, slug=slug)
+    is_liked = False
+    if post.likes.filter(id=request.user.id).exists():
+        is_liked = True
+
     context = {
-    'post':post
+    'post':post,
+    'is_liked':is_liked,
+    'total_likes':post.total_likes()
     }
     return render(request,'blog/post_detail.html',context)
 
@@ -136,3 +142,12 @@ def edit_profile(request):
      'profile_form':profile_form,
     }
     return render(request,'blog/edit_profile.html',context)
+
+def like_post(request):
+    post  = get_object_or_404(Post,id=request.POST.get('post-id'))
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:    
+        post.likes.add(request.user)
+
+    return HttpResponseRedirect(post.get_absolute_url())
