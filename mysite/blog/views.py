@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404,reverse,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from .models import Post,Profile
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -10,7 +10,7 @@ from django.contrib.auth import login,authenticate,logout
 from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.paginator  import Paginator,EmptyPage,PageNotAnInteger
-
+from django.template.loader import render_to_string
 
 def post_list(request):
     post_list = Post.published.all()
@@ -144,10 +144,23 @@ def edit_profile(request):
     return render(request,'blog/edit_profile.html',context)
 
 def like_post(request):
-    post  = get_object_or_404(Post,id=request.POST.get('post-id'))
+    # post  = get_object_or_404(Post,id=request.POST.get('post-id'))
+    post  = get_object_or_404(Post,id=request.POST.get('id'))
+
+    is_liked = False
     if post.likes.filter(id=request.user.id).exists():
         post.likes.remove(request.user)
+        is_liked = False
     else:    
         post.likes.add(request.user)
+        is_liked = True
 
-    return HttpResponseRedirect(post.get_absolute_url())
+    context = {
+        'post':post,
+        'is_liked':is_liked,
+        'total_likes':post.total_likes()
+    }
+    
+    if request.is_ajax():
+        html = render_to_string('blog/like_section.html',context,request=request)
+        return JsonResponse({'form':html})

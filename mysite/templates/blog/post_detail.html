@@ -10,17 +10,8 @@
   <hr>
   <p>{{ post.body }}</p>
 
-  {% if user.is_authenticated %}
-  <form action="{% url 'like_post' %}" method="POST">
-    {% csrf_token %}
-    {% if is_liked %}
-      <button name="post-id" value="{{ post.id }}" class="btn btn-danger" >DisLike</button>
-    {% else %}
-      <button name="post-id" value="{{ post.id }}" class="btn btn-primary" >Like</button>
-    {% endif %} 
-  </form>
-  {% endif %}
-  <span>
-    {{ total_likes }} Like{{ total_likes|pluralize}}
-  </span>
+  <div id="like-section">
+    {% include 'blog/like_section.html'%}
+  </div>
+
 {% endblock %}
