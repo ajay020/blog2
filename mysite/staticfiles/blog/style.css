@@ -9,10 +9,10 @@ body{
 }
 
 .gallery{
-  margin: 2px 0 2px 0;
+  margin: 20px 0 20px 0;
 }
 
-.gallery .img-thumbnail{
+.thumb{
   width: 250px;
   height: 300px;
 }

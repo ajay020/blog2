@@ -2,12 +2,18 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404,reverse,redirect
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse,JsonResponse,Http404
 from .models import Post,Profile,Images
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate,logout
-from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditForm,ProfileEditForm
+from .forms import (PostCreateForm,
+  UserLoginForm,
+  UserRegistrationForm,
+  UserEditForm,
+  ProfileEditForm,
+  PostEditForm,
+  )
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.paginator  import Paginator,EmptyPage,PageNotAnInteger
 from django.template.loader import render_to_string
@@ -181,3 +187,22 @@ def like_post(request):
     if request.is_ajax():
         html = render_to_string('blog/like_section.html',context,request=request)
         return JsonResponse({'form':html})
+
+def edit_post(request,id) :
+
+    post = get_object_or_404(Post,id=id)
+    if post.author != request.user:
+        raise Http404
+
+    if request.method == 'POST':
+        form = PostEditForm(request.POST, instance = post)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(post.get_absolute_url())
+    else:
+        form = PostEditForm(instance = post)        
+    context = {
+        'form':form,
+        'post':post
+    } 
+    return render(request,'blog/edit_post.html',context)

@@ -13,10 +13,10 @@
   <div class="row gallery">
          {% for p in post.images_set.all %}
           <div class="col-md-3">
-            <img src="{{ p.image.url }}" alt="image Not Found" class="img-thumbnail">
+            <img src="{{ p.image.url }}" alt="image" class="thumb" style="width: 250px; height: 250px;">
           </div>
           {% empty %}
-            <small> no image </small>
+            <small> select  image </small>
          {% endfor %}
 
   </div>
@@ -24,5 +24,13 @@
   <div id="like-section">
     {% include 'blog/like_section.html'%}
   </div>
+
+  {% if post.author == request.user %}
+  <div class="section-1" style="float: right;">
+           <a href="{% url 'blog:edit_post' post.id %}">
+             <button type="button" class="btn btn-outline-se=uccess">update</button>
+           </a>
+  </div>
+  {% endif %}
 
 {% endblock %}

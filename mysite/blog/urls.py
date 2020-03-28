@@ -17,6 +17,7 @@ from django.conf.urls import url
 from blog import views
 
 urlpatterns = [
+    url(r'(?P<id>\d+)/edit_post/$', views.edit_post, name='edit_post'),
     url(r'(?P<id>\d+)/(?P<slug>[\w-]+)/$', views.post_detail, name='post_detail'),
     url(r'post_create/$',views.post_create, name='post_create'),
     url(r'edit_profile/$',views.edit_profile, name='edit_profile'),

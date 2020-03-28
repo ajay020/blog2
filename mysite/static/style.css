@@ -1,0 +1,19 @@
+html{
+    position: relative;
+    min-height: 100%;
+  }
+  
+  body{
+    background-color: #33e;
+    font-family: 'Lucida Casaul','Comic Sans MS';
+  }
+  
+  .gallery{
+    margin: 20px 0 20px 0;
+  }
+  
+  .thumb{
+    width: 250px;
+    height: 300px;
+  }
+  
