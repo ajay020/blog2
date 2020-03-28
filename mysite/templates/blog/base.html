@@ -25,6 +25,11 @@
  
   <script text="text/javascript">
    $(document).ready(function(event){
+
+      $('#delete_btn').click(function(){
+            return confirm("Are you sure ? ")
+      });
+
        $(document).on('click','#like_btn',function(event){
          event.preventDefault();
          var pk = $(this).attr('value');

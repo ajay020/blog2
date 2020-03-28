@@ -233,3 +233,11 @@ def like_post(request):
         html = render_to_string('blog/like_section.html',context,request=request)
         return JsonResponse({'form':html})
 
+def delete_post(request,id):
+    post  = get_object_or_404(Post,id=id)
+    if post.author != request.user:
+        raise Http404()
+
+    post.delete()
+
+    return redirect('post_list')

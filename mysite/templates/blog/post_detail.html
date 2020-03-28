@@ -27,9 +27,12 @@
 
   {% if post.author == request.user %}
   <div class="section-1" style="float: right;">
-           <a href="{% url 'blog:edit_post' post.id %}">
-             <button type="button" class="btn btn-outline-se=uccess">update</button>
+           <a href="{% url 'blog:edit_post' id=post.id %}">
+             <button type="button" class="btn btn-outline-success">update</button>
            </a>
+           <a href="{% url 'blog:delete_post' id=post.id %}">
+            <button type="button" class="btn btn-outline-danger" id="delete_btn" >Delete</button>
+          </a>
   </div>
   {% endif %}
 
