@@ -102,6 +102,51 @@ def post_create(request):
     }
     return render(request,'blog/post_create.html',context)
 
+#.........edit post.........
+
+def edit_post(request,id) :
+    ImageFormset  = modelformset_factory(Images, fields=('image',), extra=4,max_num=4)
+    post = get_object_or_404(Post,id=id)
+    if post.author != request.user:
+        raise Http404
+
+    if request.method == 'POST':
+        form = PostEditForm(request.POST, instance = post)
+        formset = ImageFormset(request.POST or None, request.FILES or None)
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            print(formset.cleaned_data)
+            data  = Images.objects.filter(post=post)
+            for index, f in enumerate(formset):
+                if f.cleaned_data:
+                    if f.cleaned_data['id'] is None:
+                         photo  = Images(post=post, image = f.cleaned_data['image'])
+                         photo.save()
+                    elif f.cleaned_data['image'] is False:
+                        photo = Images.objects.get(id=request.POST.get('form-'+str(index) + '-id'))     
+                        photo.delete()
+                    else:
+                         photo  = Images(post=post, image = f.cleaned_data['image'])
+                         d  = Images.objects.get(id=data[index].id)
+                         d.image = photo.image
+                         d.save()
+
+            return HttpResponseRedirect(post.get_absolute_url())
+    else:        
+
+        form = PostEditForm(instance = post)        
+        formset  = ImageFormset(queryset = Images.objects.filter(post=post))
+
+    context = {
+        'form':form,
+        'post':post,
+        'formset':formset,
+    } 
+    return render(request,'blog/edit_post.html',context)
+
+
+
 def user_login(request):
     if request.method == 'POST':
         form  = UserLoginForm(request.POST)
@@ -188,21 +233,3 @@ def like_post(request):
         html = render_to_string('blog/like_section.html',context,request=request)
         return JsonResponse({'form':html})
 
-def edit_post(request,id) :
-
-    post = get_object_or_404(Post,id=id)
-    if post.author != request.user:
-        raise Http404
-
-    if request.method == 'POST':
-        form = PostEditForm(request.POST, instance = post)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(post.get_absolute_url())
-    else:
-        form = PostEditForm(instance = post)        
-    context = {
-        'form':form,
-        'post':post
-    } 
-    return render(request,'blog/edit_post.html',context)
