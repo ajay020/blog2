@@ -18,6 +18,8 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.core.paginator  import Paginator,EmptyPage,PageNotAnInteger
 from django.template.loader import render_to_string
 from django.forms import modelformset_factory
+from django.contrib import messages
+
 
 def post_list(request):
     post_list = Post.published.all()
@@ -90,6 +92,7 @@ def post_create(request):
                  except Exception as e:
                      print("Error >>: " ,e)
                      break 
+            messages.success(request,"Post has been created Successfully!!")        
             return redirect('post_list') 
 
     else :
@@ -132,6 +135,7 @@ def edit_post(request,id) :
                          d.image = photo.image
                          d.save()
 
+            messages.success(request,'{} has been  updated!'.format(post.title))    
             return HttpResponseRedirect(post.get_absolute_url())
     else:        
 
@@ -157,6 +161,7 @@ def user_login(request):
             if user:
                 if user.is_active:
                     login(request,user)
+                    messages.success(request,"Login successful!!")
                     return HttpResponseRedirect(reverse('post_list'))
                 else:
                     return HttpResponse("User is not active ")
@@ -171,6 +176,7 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
+    messages.success(request,'Logout successful !!')
     return redirect('post_list')
 
 def register(request):
@@ -239,5 +245,5 @@ def delete_post(request,id):
         raise Http404()
 
     post.delete()
-
+    messages.warning(request,'{} has been  deleted successfully '.format(post.title))     
     return redirect('post_list')

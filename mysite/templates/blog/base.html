@@ -12,6 +12,13 @@
    {% include 'blog/navbar.html' %}
 
     <div class="container-fluid">
+      <div class="messages">
+        {% for message in messages %}
+          <p class="alert alert-{{message.tags}}">
+            {{message}}
+          </p>
+        {% endfor %}
+      </div>
        {% block content%}
        {% endblock %}
     </div>
@@ -28,6 +35,13 @@
 
       $('#delete_btn').click(function(){
             return confirm("Are you sure ? ")
+      });
+
+
+      $(function(){
+          setTimeout(function(){
+           $('.alert').slideUp(2000);
+          },2000); 
       });
 
        $(document).on('click','#like_btn',function(event){
