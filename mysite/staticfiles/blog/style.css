@@ -4,6 +4,15 @@ html{
 }
 
 body{
-  /* background-color: #33e; */
+  background-color: #33e;
   font-family: 'Lucida Casaul','Comic Sans MS';
+}
+
+.gallery{
+  margin: 2px 0 2px 0;
+}
+
+.gallery .img-thumbnail{
+  width: 250px;
+  height: 300px;
 }

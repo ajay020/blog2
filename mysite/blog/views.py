@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.shortcuts import render,get_object_or_404,reverse,redirect
 from django.http import HttpResponse,JsonResponse
-from .models import Post,Profile
+from .models import Post,Profile,Images
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,authenticate,logout
@@ -11,6 +11,7 @@ from .forms import PostCreateForm,UserLoginForm,UserRegistrationForm,UserEditFor
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.paginator  import Paginator,EmptyPage,PageNotAnInteger
 from django.template.loader import render_to_string
+from django.forms import modelformset_factory
 
 def post_list(request):
     post_list = Post.published.all()
@@ -65,17 +66,33 @@ def post_detail(request, id, slug):
     return render(request,'blog/post_detail.html',context)
 
 def post_create(request):
+    ImageFormset  = modelformset_factory(Images, fields=('image',), extra=4)
+
     if request.method == 'POST':
         form = PostCreateForm(request.POST)
+        formset = ImageFormset(request.POST or None, request.FILES or None)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+          
+            if formset.is_valid():  
+              for f in formset:
+                 try: 
+                   photo  = Images(post=post, image = f.cleaned_data['image'])
+                   photo.save()
+                 except Exception as e:
+                     print("Error >>: " ,e)
+                     break 
+            return redirect('post_list') 
+
     else :
         form  = PostCreateForm()
+        formset  = ImageFormset(queryset = Images.objects.none())
 
     context = {
-    'form':form
+    'form':form,
+    'formset':formset,
     }
     return render(request,'blog/post_create.html',context)
 
